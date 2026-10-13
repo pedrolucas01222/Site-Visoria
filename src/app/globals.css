@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #050505;
+  --color-ink-2: #0b0d12;
+  --color-paper: #f5f7fa;
+  --color-mute: #a1a8b3;
+  --color-blue: #087eff;
+  --color-cyan: #20c4ff;
+  --color-line: rgb(245 247 250 / 0.12);
+  --color-line-strong: rgb(245 247 250 / 0.24);
+  --color-danger: #ff8a8a;
+}
+
+@theme inline {
+  --font-display: var(--font-sora), ui-sans-serif, system-ui, "Segoe UI", Arial, sans-serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, "Segoe UI", Arial, sans-serif;
+}
+
+@layer base {
+  html {
+    background: var(--color-ink);
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+  body {
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-sans);
+    line-height: 1.65;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+    text-wrap: balance;
+  }
+  p { text-wrap: pretty; }
+  :focus-visible {
+    outline: 2px solid var(--color-cyan);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  ::selection { background: var(--color-blue); color: var(--color-ink); }
+  [id] { scroll-margin-top: 6rem; }
+}
+
+/* Sequência de entrada do hero: o único momento coreografado da página. */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes draw {
+  from { stroke-dashoffset: var(--len, 1200); }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes orbit {
+  to { transform: rotate(360deg); }
+}
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.rise { animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: var(--d, 0ms); }
+.fade-in { animation: fade 1.2s ease both; animation-delay: var(--d, 0ms); }
+.draw { stroke-dasharray: var(--len, 1200); animation: draw 2.2s cubic-bezier(0.3, 0.6, 0.2, 1) both; animation-delay: var(--d, 0ms); }
+.orbit { transform-origin: center; transform-box: fill-box; animation: orbit var(--t, 120s) linear infinite; }
+
+.hairline-grid {
+  background-image:
+    linear-gradient(to right, var(--color-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse at 70% 40%, #000 0%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at 70% 40%, #000 0%, transparent 70%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
