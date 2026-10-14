@@ -78,3 +78,25 @@ export function getQuoteWhatsAppUrl(d: QuoteSummary): string | null {
   ].filter((l) => l !== false && l !== undefined) as string[];
   return getWhatsAppUrl(lines.join("\n"));
 }
+
+/** Texto completo do pedido (para copiar e colar em qualquer e-mail). */
+export function getQuoteText(d: QuoteSummary): string {
+  return `${quoteLines(d).join("\n")}\n\nDescrição:\n${d.description}`;
+}
+
+function composeBody(d: QuoteSummary): string {
+  const desc = d.description.length > 1500 ? `${d.description.slice(0, 1500)}…` : d.description;
+  return `${quoteLines(d).join("\n")}\n\nDescrição:\n${desc}`;
+}
+
+/** Abre o Gmail na web (funciona em qualquer navegador, sem programa de e-mail instalado). */
+export function getQuoteGmailUrl(d: QuoteSummary): string {
+  const q = new URLSearchParams({ view: "cm", fs: "1", to: siteConfig.contact.email, su: `Pedido de orçamento — ${d.name}`, body: composeBody(d) });
+  return `https://mail.google.com/mail/?${q.toString()}`;
+}
+
+/** Abre o Outlook na web. */
+export function getQuoteOutlookUrl(d: QuoteSummary): string {
+  const q = new URLSearchParams({ to: siteConfig.contact.email, subject: `Pedido de orçamento — ${d.name}`, body: composeBody(d) });
+  return `https://outlook.live.com/mail/0/deeplink/compose?${q.toString()}`;
+}

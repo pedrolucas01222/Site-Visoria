@@ -14,7 +14,8 @@ import {
   type FieldErrors,
 } from "@/lib/validation";
 import { siteConfig } from "@/config/site";
-import { getQuoteMailtoUrl, getQuoteWhatsAppUrl } from "@/lib/contact-links";
+import { getQuoteGmailUrl, getQuoteMailtoUrl, getQuoteOutlookUrl, getQuoteText, getQuoteWhatsAppUrl } from "@/lib/contact-links";
+import { sendViaFormsubmit } from "@/lib/formsubmit";
 import { cn } from "@/lib/utils";
 
 type Status = "idle" | "submitting" | "success" | "error" | "fallback";
@@ -100,7 +101,8 @@ export function ContactForm({
   const [errors, setErrors] = useState<FieldErrors>({});
   const [status, setStatus] = useState<Status>("idle");
   const [serverMessage, setServerMessage] = useState("");
-  const [fallback, setFallback] = useState<{ kind: "email" | "whatsapp"; url: string } | null>(null);
+  const [fallback, setFallback] = useState<{ kind: "email" | "whatsapp"; data: ContactPayload } | null>(null);
+  const [copied, setCopied] = useState(false);
   const channel = useRef<"email" | "whatsapp">("email");
   const startedAt = useRef<number>(Date.now());
   const summaryRef = useRef<HTMLDivElement>(null);
@@ -116,18 +118,22 @@ export function ContactForm({
   const describedBy = (id: string, key: keyof FieldErrors, hasHint = false) =>
     errors[key] ? `${id}-erro` : hasHint ? `${id}-hint` : undefined;
 
-  /** Se o envio automático por e-mail falhar, abre o e-mail do visitante com o pedido pronto (ou o WhatsApp). */
+  /** Nenhum envio automático funcionou: oferece formas de enviar que não dependem de programa instalado. */
   function goFallback(data: ContactPayload) {
-    const mail = getQuoteMailtoUrl(data);
-    const wa = getQuoteWhatsAppUrl(data);
-    if (mail) setFallback({ kind: "email", url: mail });
-    else if (wa) setFallback({ kind: "whatsapp", url: wa });
-    else {
-      setServerMessage("Não foi possível enviar sua mensagem agora. Seus dados continuam preenchidos; tente novamente em instantes.");
-      setStatus("error");
-      return;
-    }
+    setCopied(false);
+    setFallback({ kind: "email", data });
     setStatus("fallback");
+  }
+
+  async function copyRequest(data: ContactPayload) {
+    const text = `Para: ${siteConfig.contact.email}\n\n${getQuoteText(data)}`;
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+    } catch {
+      document.getElementById("pedido-texto")?.focus();
+      (document.getElementById("pedido-texto") as HTMLTextAreaElement | null)?.select();
+    }
   }
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -154,7 +160,7 @@ export function ContactForm({
         return;
       }
       window.open(url, "_blank", "noopener,noreferrer");
-      setFallback({ kind: "whatsapp", url });
+      setFallback({ kind: "whatsapp", data: result.data });
       setStatus("fallback");
       return;
     }
@@ -183,8 +189,16 @@ export function ContactForm({
         setStatus("error");
         return;
       }
+      if (await sendViaFormsubmit(result.data)) {
+        setStatus("success");
+        return;
+      }
       goFallback(result.data);
     } catch {
+      if (await sendViaFormsubmit(result.data)) {
+        setStatus("success");
+        return;
+      }
       goFallback(result.data);
     }
   }
@@ -203,27 +217,66 @@ export function ContactForm({
   }
 
   if (status === "fallback" && fallback) {
-    const isMail = fallback.kind === "email";
+    const d = fallback.data;
+    const btn = "inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 font-semibold transition-colors";
+    const primary = `${btn} bg-blue text-ink hover:bg-cyan`;
+    const secondary = `${btn} border border-line-strong hover:border-cyan hover:text-cyan`;
+
+    if (fallback.kind === "whatsapp") {
+      const url = getQuoteWhatsAppUrl(d);
+      return (
+        <div role="status" className="rounded-2xl border border-cyan/50 bg-ink-2 p-8 sm:p-10">
+          <MessageCircle size={36} aria-hidden="true" className="text-cyan" />
+          <h2 className="mt-5 font-display text-3xl font-semibold">Falta só um passo.</h2>
+          <p className="mt-3 text-mute">
+            Abrimos o WhatsApp com sua mensagem pronta. Se ele não abriu, toque no botão abaixo. O pedido só chega até a Visoria depois que você enviar a mensagem por lá.
+          </p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            {url ? (
+              <a href={url} target="_blank" rel="noopener noreferrer" className={primary}>
+                <MessageCircle size={18} aria-hidden="true" /> Abrir WhatsApp<span className="sr-only"> (abre em nova aba)</span>
+              </a>
+            ) : null}
+            <button type="button" onClick={() => setStatus("idle")} className={secondary}>Voltar e editar</button>
+          </div>
+        </div>
+      );
+    }
+
+    const wa = getQuoteWhatsAppUrl(d);
     return (
       <div role="status" className="rounded-2xl border border-cyan/50 bg-ink-2 p-8 sm:p-10">
-        {isMail ? <Mail size={36} aria-hidden="true" className="text-cyan" /> : <MessageCircle size={36} aria-hidden="true" className="text-cyan" />}
-        <h2 className="mt-5 font-display text-3xl font-semibold">Falta só um passo.</h2>
+        <Mail size={36} aria-hidden="true" className="text-cyan" />
+        <h2 className="mt-5 font-display text-3xl font-semibold">Quase lá: finalize o envio.</h2>
         <p className="mt-3 text-mute">
-          {isMail
-            ? "Não conseguimos enviar automaticamente, mas o e-mail está pronto com todos os dados do pedido. Abra-o e envie para a Visoria. O pedido só chega até nós depois que você enviar."
-            : "Abrimos o WhatsApp com sua mensagem pronta, com todos os dados do pedido. Se ele não abriu, toque no botão abaixo. O pedido só chega até a Visoria depois que você enviar a mensagem por lá."}
+          O envio automático não foi concluído, mas seu pedido está pronto. Escolha abaixo como enviá-lo para <strong className="text-paper">{siteConfig.contact.email}</strong>. O pedido só chega até a Visoria depois que você enviar.
         </p>
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <a href={fallback.url} {...(isMail ? {} : { target: "_blank", rel: "noopener noreferrer" })}
-            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-blue px-8 py-3 font-semibold text-ink transition-colors hover:bg-cyan">
-            {isMail ? <Mail size={18} aria-hidden="true" /> : <MessageCircle size={18} aria-hidden="true" />}
-            {isMail ? "Abrir e-mail com o pedido" : "Abrir WhatsApp"}
-            {isMail ? null : <span className="sr-only"> (abre em nova aba)</span>}
+        <div className="mt-8 grid gap-3 sm:grid-cols-2">
+          <a href={getQuoteGmailUrl(d)} target="_blank" rel="noopener noreferrer" className={primary}>
+            Abrir no Gmail<span className="sr-only"> (abre em nova aba)</span>
           </a>
-          <button type="button" onClick={() => setStatus("idle")}
-            className="inline-flex min-h-12 items-center justify-center rounded-full border border-line-strong px-8 py-3 font-semibold transition-colors hover:border-cyan hover:text-cyan">
-            Voltar e editar
+          <a href={getQuoteOutlookUrl(d)} target="_blank" rel="noopener noreferrer" className={secondary}>
+            Abrir no Outlook<span className="sr-only"> (abre em nova aba)</span>
+          </a>
+          <a href={getQuoteMailtoUrl(d) ?? "#"} className={secondary}>Abrir app de e-mail</a>
+          <button type="button" onClick={() => copyRequest(d)} className={secondary}>
+            {copied ? "Pedido copiado!" : "Copiar pedido"}
           </button>
+        </div>
+        <p className="mt-3 text-sm text-mute" aria-live="polite">
+          {copied ? "Cole o texto em qualquer e-mail e envie para o endereço acima." : "Se nada abrir, use “Copiar pedido” e cole em qualquer e-mail."}
+        </p>
+        <label htmlFor="pedido-texto" className="sr-only">Texto do pedido</label>
+        <textarea id="pedido-texto" readOnly rows={6} value={`Para: ${siteConfig.contact.email}\n\n${getQuoteText(d)}`}
+          onFocus={(e) => e.currentTarget.select()}
+          className="mt-4 block w-full rounded-xl border border-line-strong bg-ink p-4 text-sm text-mute" />
+        <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
+          {wa ? (
+            <a href={wa} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 text-cyan underline underline-offset-4">
+              <MessageCircle size={16} aria-hidden="true" /> Enviar pelo WhatsApp<span className="sr-only"> (abre em nova aba)</span>
+            </a>
+          ) : null}
+          <button type="button" onClick={() => setStatus("idle")} className="min-h-11 text-mute underline underline-offset-4 hover:text-cyan">Voltar e editar</button>
         </div>
       </div>
     );
