@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRef, useState } from "react";
-import { Check, CheckCircle2, Loader2, MessageCircle, TriangleAlert } from "lucide-react";
+import { Check, CheckCircle2, Loader2, Mail, MessageCircle, TriangleAlert } from "lucide-react";
 import { serviceOptions } from "@/data/services";
 import {
   budgetOptions,
@@ -14,7 +14,7 @@ import {
   type FieldErrors,
 } from "@/lib/validation";
 import { siteConfig } from "@/config/site";
-import { getQuoteWhatsAppUrl } from "@/lib/contact-links";
+import { getQuoteMailtoUrl, getQuoteWhatsAppUrl } from "@/lib/contact-links";
 import { cn } from "@/lib/utils";
 
 type Status = "idle" | "submitting" | "success" | "error" | "fallback";
@@ -100,7 +100,8 @@ export function ContactForm({
   const [errors, setErrors] = useState<FieldErrors>({});
   const [status, setStatus] = useState<Status>("idle");
   const [serverMessage, setServerMessage] = useState("");
-  const [fallbackUrl, setFallbackUrl] = useState<string | null>(null);
+  const [fallback, setFallback] = useState<{ kind: "email" | "whatsapp"; url: string } | null>(null);
+  const channel = useRef<"email" | "whatsapp">("email");
   const startedAt = useRef<number>(Date.now());
   const summaryRef = useRef<HTMLDivElement>(null);
 
@@ -115,16 +116,18 @@ export function ContactForm({
   const describedBy = (id: string, key: keyof FieldErrors, hasHint = false) =>
     errors[key] ? `${id}-erro` : hasHint ? `${id}-hint` : undefined;
 
-  /** Se o envio automático não estiver disponível, entrega o pedido completo pelo WhatsApp. */
+  /** Se o envio automático por e-mail falhar, abre o e-mail do visitante com o pedido pronto (ou o WhatsApp). */
   function goFallback(data: ContactPayload) {
-    const url = getQuoteWhatsAppUrl(data);
-    if (url) {
-      setFallbackUrl(url);
-      setStatus("fallback");
-    } else {
+    const mail = getQuoteMailtoUrl(data);
+    const wa = getQuoteWhatsAppUrl(data);
+    if (mail) setFallback({ kind: "email", url: mail });
+    else if (wa) setFallback({ kind: "whatsapp", url: wa });
+    else {
       setServerMessage("Não foi possível enviar sua mensagem agora. Seus dados continuam preenchidos; tente novamente em instantes.");
       setStatus("error");
+      return;
     }
+    setStatus("fallback");
   }
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -142,6 +145,20 @@ export function ContactForm({
 
     setErrors({});
     setServerMessage("");
+
+    if (channel.current === "whatsapp") {
+      const url = getQuoteWhatsAppUrl(result.data);
+      if (!url) {
+        setServerMessage("O WhatsApp não está disponível no momento. Use o envio por e-mail.");
+        setStatus("error");
+        return;
+      }
+      window.open(url, "_blank", "noopener,noreferrer");
+      setFallback({ kind: "whatsapp", url });
+      setStatus("fallback");
+      return;
+    }
+
     setStatus("submitting");
     try {
       const res = await fetch("/api/contact", {
@@ -185,19 +202,23 @@ export function ContactForm({
     );
   }
 
-  if (status === "fallback" && fallbackUrl) {
+  if (status === "fallback" && fallback) {
+    const isMail = fallback.kind === "email";
     return (
       <div role="status" className="rounded-2xl border border-cyan/50 bg-ink-2 p-8 sm:p-10">
-        <MessageCircle size={36} aria-hidden="true" className="text-cyan" />
+        {isMail ? <Mail size={36} aria-hidden="true" className="text-cyan" /> : <MessageCircle size={36} aria-hidden="true" className="text-cyan" />}
         <h2 className="mt-5 font-display text-3xl font-semibold">Falta só um passo.</h2>
         <p className="mt-3 text-mute">
-          Montamos sua mensagem com todos os dados do pedido. Toque no botão para abrir o WhatsApp e enviar. O pedido só chega até a Visoria depois que você enviar a mensagem por lá.
+          {isMail
+            ? "Não conseguimos enviar automaticamente, mas o e-mail está pronto com todos os dados do pedido. Abra-o e envie para a Visoria. O pedido só chega até nós depois que você enviar."
+            : "Abrimos o WhatsApp com sua mensagem pronta, com todos os dados do pedido. Se ele não abriu, toque no botão abaixo. O pedido só chega até a Visoria depois que você enviar a mensagem por lá."}
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <a href={fallbackUrl} target="_blank" rel="noopener noreferrer"
+          <a href={fallback.url} {...(isMail ? {} : { target: "_blank", rel: "noopener noreferrer" })}
             className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-blue px-8 py-3 font-semibold text-ink transition-colors hover:bg-cyan">
-            <MessageCircle size={18} aria-hidden="true" />
-            Enviar pelo WhatsApp<span className="sr-only"> (abre em nova aba)</span>
+            {isMail ? <Mail size={18} aria-hidden="true" /> : <MessageCircle size={18} aria-hidden="true" />}
+            {isMail ? "Abrir e-mail com o pedido" : "Abrir WhatsApp"}
+            {isMail ? null : <span className="sr-only"> (abre em nova aba)</span>}
           </a>
           <button type="button" onClick={() => setStatus("idle")}
             className="inline-flex min-h-12 items-center justify-center rounded-full border border-line-strong px-8 py-3 font-semibold transition-colors hover:border-cyan hover:text-cyan">
@@ -361,20 +382,38 @@ export function ContactForm({
         </div>
       ) : null}
 
-      <button
-        type="submit"
-        disabled={status === "submitting"}
-        className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-blue px-8 py-3 font-semibold text-ink transition-colors hover:bg-cyan disabled:cursor-wait disabled:opacity-70 sm:w-auto"
-      >
-        {status === "submitting" ? (
-          <>
-            <Loader2 size={18} aria-hidden="true" className="animate-spin" />
-            Enviando…
-          </>
-        ) : (
-          "Solicitar orçamento"
-        )}
-      </button>
+      <div>
+        <p className="mb-3 text-sm text-mute">Escolha como enviar seu pedido:</p>
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <button
+            type="submit"
+            onClick={() => { channel.current = "email"; }}
+            disabled={status === "submitting"}
+            className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-blue px-8 py-3 font-semibold text-ink transition-colors hover:bg-cyan disabled:cursor-wait disabled:opacity-70 sm:w-auto"
+          >
+            {status === "submitting" ? (
+              <>
+                <Loader2 size={18} aria-hidden="true" className="animate-spin" />
+                Enviando…
+              </>
+            ) : (
+              <>
+                <Mail size={18} aria-hidden="true" />
+                Enviar por e-mail
+              </>
+            )}
+          </button>
+          <button
+            type="submit"
+            onClick={() => { channel.current = "whatsapp"; }}
+            disabled={status === "submitting"}
+            className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-line-strong px-8 py-3 font-semibold transition-colors hover:border-cyan hover:text-cyan disabled:opacity-70 sm:w-auto"
+          >
+            <MessageCircle size={18} aria-hidden="true" />
+            Enviar pelo WhatsApp
+          </button>
+        </div>
+      </div>
     </form>
   );
 }

@@ -32,7 +32,10 @@ O formulário valida tudo no servidor e só mostra "enviado" quando um provedor 
    - `CONTACT_TO_EMAIL=outro@email.com` — troca o destino.
    - `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` — Resend, mais robusto, exige domínio verificado.
    - `FORM_WEBHOOK_URL` — webhook (Make, Zapier, n8n etc.).
-2. **Plano B automático (já funciona sem configurar nada):** se o envio automático não estiver ativo ou falhar, o visitante vê o botão "Enviar pelo WhatsApp" com uma mensagem pronta contendo nome, e-mail, serviços, tipo de projeto, prazo, investimento e descrição. O pedido chega até você quando ele toca em enviar no WhatsApp (não é confirmado automaticamente).
+2. **Escolha do visitante no formulário:** há dois botões, "Enviar por e-mail" e "Enviar pelo WhatsApp".
+   - **E-mail:** envia automaticamente para `studiovisoria@gmail.com`. Se o envio falhar (ou o Formsubmit ainda não estiver ativado), o site abre o e-mail do visitante com o pedido completo já endereçado a esse Gmail.
+   - **WhatsApp:** abre `wa.me/5544998185425` com a mensagem pronta (nome, e-mail, serviços, tipo de projeto, prazo, investimento e descrição).
+   Nos planos B (e-mail do visitante ou WhatsApp), o pedido só chega quando o visitante enviar a mensagem; o site avisa isso.
 
 Proteções: honeypot, tempo mínimo de preenchimento, checagem de origem, limite de 5 tentativas por IP (em memória; para algo mais forte use Turnstile/hCaptcha ou WAF).
 

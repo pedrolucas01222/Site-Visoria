@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Info } from "lucide-react";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container } from "@/components/ui/Container";
 import { privacy } from "@/data/content";
@@ -16,10 +15,6 @@ export default function PrivacyPage() {
     <>
       <PageHero title="Política de Privacidade." />
       <Container className="max-w-3xl py-16 sm:py-24">
-        <p className="mb-10 flex gap-3 rounded-xl border border-line-strong bg-ink-2 p-4 text-sm">
-          <Info size={18} aria-hidden="true" className="mt-0.5 shrink-0 text-cyan" />
-          <span>{privacy.updatedAt}</span>
-        </p>
         <p className="text-lg text-mute">{privacy.intro}</p>
         <div className="mt-12 space-y-12">
           {privacy.sections.map((s) => (

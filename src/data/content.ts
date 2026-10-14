@@ -62,7 +62,6 @@ export const about = {
 };
 
 export const privacy = {
-  updatedAt: "Modelo inicial — revisar antes da publicação",
   intro:
     "Esta Política de Privacidade descreve, de forma geral, como a Visoria Studio trata os dados pessoais enviados por meio deste site. Este texto é um modelo inicial e deve ser revisado por um profissional jurídico e atualizado conforme os dados e as ferramentas efetivamente utilizados.",
   sections: [
@@ -100,7 +99,7 @@ export const privacy = {
     {
       title: "Por quanto tempo guardamos os dados",
       body: [
-        "Mantemos os dados pelo tempo necessário para atender à sua solicitação e cumprir obrigações legais. Contatos que não resultarem em projeto devem ser excluídos em prazo definido pela empresa (sugestão: até 12 meses).",
+        "Mantemos os dados pelo tempo necessário para atender à sua solicitação e cumprir obrigações legais. Contatos que não resultarem em projeto devem ser excluídos em prazo definido pela empresa (12 meses).",
       ],
     },
     {

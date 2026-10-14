@@ -33,6 +33,30 @@ export interface QuoteSummary {
   source: string;
 }
 
+function quoteLines(d: QuoteSummary): string[] {
+  const labels = d.services.map((id) => serviceOptions.find((s) => s.id === id)?.label ?? id).join(", ");
+  return [
+    `Nome: ${d.name}`,
+    d.company ? `Empresa: ${d.company}` : "",
+    `E-mail: ${d.email}`,
+    d.whatsapp ? `WhatsApp: ${d.whatsapp}` : "",
+    `Serviços: ${labels}`,
+    `Tipo de projeto: ${d.projectType}`,
+    d.deadline ? `Prazo: ${d.deadline}` : "",
+    d.budget ? `Investimento: ${d.budget}` : "",
+    d.source ? `Como conheceu: ${d.source}` : "",
+  ].filter(Boolean);
+}
+
+/** Abre o programa de e-mail do visitante com o pedido completo, endereçado ao e-mail comercial. */
+export function getQuoteMailtoUrl(d: QuoteSummary): string | null {
+  const to = siteConfig.contact.email.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) return null;
+  const desc = d.description.length > 1500 ? `${d.description.slice(0, 1500)}…` : d.description;
+  const body = `${quoteLines(d).join("\r\n")}\r\n\r\nDescrição:\r\n${desc.replace(/\r?\n/g, "\r\n")}`;
+  return `mailto:${to}?subject=${encodeURIComponent(`Pedido de orçamento — ${d.name}`)}&body=${encodeURIComponent(body)}`;
+}
+
 /** Monta a URL do WhatsApp com todos os dados do pedido de orçamento já preenchidos. */
 export function getQuoteWhatsAppUrl(d: QuoteSummary): string | null {
   const labels = d.services.map((id) => serviceOptions.find((s) => s.id === id)?.label ?? id).join(", ");
