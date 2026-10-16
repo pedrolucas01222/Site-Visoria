@@ -11,7 +11,7 @@ export function Intro() {
         </h2>
         <div className="lg:col-span-5 lg:pt-3">
           <p className="text-lg text-mute sm:text-xl">{intro.text}</p>
-          <ButtonLink href="/sobre" variant="ghost" className="mt-6">Conheça a Visoria</ButtonLink>
+          <ButtonLink href="/sobre" variant="ghost" className="mt-6">Conheça a Visória</ButtonLink>
         </div>
       </Container>
     </section>

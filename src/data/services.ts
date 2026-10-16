@@ -7,7 +7,7 @@ import type { ServiceCategory } from "@/types";
 export const serviceCategories: ServiceCategory[] = [
   {
     id: "creative",
-    brand: "Visoria Creative",
+    brand: "Visória Creative",
     title: "Design e identidade visual",
     icon: "palette",
     shortDescription:
@@ -44,7 +44,7 @@ export const serviceCategories: ServiceCategory[] = [
   },
   {
     id: "media",
-    brand: "Visoria Media",
+    brand: "Visória Media",
     title: "Audiovisual e fotografia",
     icon: "clapperboard",
     shortDescription:
@@ -82,7 +82,7 @@ export const serviceCategories: ServiceCategory[] = [
   },
   {
     id: "digital",
-    brand: "Visoria Digital",
+    brand: "Visória Digital",
     title: "Sites e comércio eletrônico",
     icon: "globe",
     shortDescription:
@@ -112,7 +112,7 @@ export const serviceCategories: ServiceCategory[] = [
   },
   {
     id: "marketing",
-    brand: "Visoria Marketing",
+    brand: "Visória Marketing",
     title: "Marketing e publicidade",
     icon: "megaphone",
     shortDescription:
@@ -144,7 +144,7 @@ export const serviceCategories: ServiceCategory[] = [
   },
   {
     id: "tech",
-    brand: "Visoria Tech",
+    brand: "Visória Tech",
     title: "Tecnologia, programação e IA",
     icon: "cpu",
     shortDescription:

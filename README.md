@@ -1,4 +1,4 @@
-# VISORIA Studio — site institucional
+# VISÓRIA Studio — site institucional
 
 Next.js 15 (App Router) + React 19 + TypeScript + Tailwind CSS 4 + Lucide. Animações em CSS puro, com suporte a `prefers-reduced-motion`.
 
@@ -18,7 +18,7 @@ Requer Node 20.9+.
 
 ## Contatos já configurados
 
-- WhatsApp: `5544998185425` (mensagem: "Olá! Gostaria de fazer um orçamento com a Visoria.")
+- WhatsApp: `5544998185425` (mensagem: "Olá! Gostaria de fazer um orçamento com a Visória.")
 - Instagram: `https://www.instagram.com/visoria_studio`
 - E-mail comercial e destino dos pedidos: `studiovisoria@gmail.com`
 

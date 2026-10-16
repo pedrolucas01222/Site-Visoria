@@ -17,7 +17,7 @@ export type ServiceCategoryId =
 
 export interface ServiceCategory {
   id: ServiceCategoryId;
-  /** Nome da área, ex.: "Visoria Creative". */
+  /** Nome da área, ex.: "Visória Creative". */
   brand: string;
   /** Subtítulo da área, ex.: "Design e identidade visual". */
   title: string;

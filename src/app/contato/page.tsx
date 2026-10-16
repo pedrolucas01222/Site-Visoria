@@ -12,9 +12,9 @@ import { getMailtoUrl, getWhatsAppUrl } from "@/lib/contact-links";
 export const metadata: Metadata = {
   title: "Contato e orçamento",
   description:
-    "Conte sobre seu projeto e solicite um orçamento à Visoria Studio: identidade visual, sites, vídeos, marketing, sistemas e consultoria.",
+    "Conte sobre seu projeto e solicite um orçamento à Visória Studio: identidade visual, sites, vídeos, marketing, sistemas e consultoria.",
   alternates: { canonical: "/contato" },
-  openGraph: { url: "/contato", title: "Contato e orçamento | VISORIA Studio" },
+  openGraph: { url: "/contato", title: "Contato e orçamento | VISÓRIA Studio" },
 };
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;

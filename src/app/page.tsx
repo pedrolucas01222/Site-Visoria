@@ -10,7 +10,7 @@ import { siteConfig } from "@/config/site";
 export const metadata: Metadata = {
   title: { absolute: `${siteConfig.name} — Design, tecnologia e audiovisual` },
   description:
-    "A Visoria Studio une design, tecnologia e audiovisual para criar marcas, sites, vídeos e soluções digitais. Solicite um orçamento.",
+    "A Visória Studio une design, tecnologia e audiovisual para criar marcas, sites, vídeos e soluções digitais. Solicite um orçamento.",
   alternates: { canonical: "/" },
 };
 

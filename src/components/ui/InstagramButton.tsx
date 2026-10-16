@@ -2,7 +2,7 @@ import { Instagram } from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
 import { getSocialLinks } from "@/lib/contact-links";
 
-/** Link para o Instagram da Visoria (some automaticamente se a URL não estiver configurada). */
+/** Link para o Instagram da Visória (some automaticamente se a URL não estiver configurada). */
 export function InstagramButton({
   label = "Ver no Instagram",
   variant = "ghost",

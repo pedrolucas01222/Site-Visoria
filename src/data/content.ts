@@ -9,7 +9,7 @@ export const hero = {
 
 export const intro = {
   title: "Criatividade com propósito. Tecnologia com direção.",
-  text: "A Visoria Studio desenvolve soluções criativas e digitais para empresas que desejam fortalecer sua marca, melhorar sua comunicação e ampliar suas possibilidades no ambiente digital.",
+  text: "A Visória Studio desenvolve soluções criativas e digitais para empresas que desejam fortalecer sua marca, melhorar sua comunicação e ampliar suas possibilidades no ambiente digital.",
 };
 
 export const processSteps: TextItem[] = [
@@ -35,7 +35,7 @@ export const finalCta = {
 
 export const about = {
   paragraphs: [
-    "A Visoria Studio nasceu da união entre criatividade, comunicação e tecnologia. Nosso objetivo é desenvolver soluções que ajudem marcas e empresas a se apresentar melhor, comunicar suas ideias e aproveitar as oportunidades do ambiente digital.",
+    "A Visória Studio nasceu da união entre criatividade, comunicação e tecnologia. Nosso objetivo é desenvolver soluções que ajudem marcas e empresas a se apresentar melhor, comunicar suas ideias e aproveitar as oportunidades do ambiente digital.",
     "Acreditamos que um bom projeto vai além da aparência: ele precisa ter propósito, coerência e uma função clara para o negócio.",
   ],
   purpose:
@@ -63,18 +63,18 @@ export const about = {
 
 export const privacy = {
   intro:
-    "Esta Política de Privacidade descreve, de forma geral, como a Visoria Studio trata os dados pessoais enviados por meio deste site. Este texto é um modelo inicial e deve ser revisado por um profissional jurídico e atualizado conforme os dados e as ferramentas efetivamente utilizados.",
+    "Esta Política de Privacidade descreve, de forma geral, como a Visória Studio trata os dados pessoais enviados por meio deste site. Este texto é um modelo inicial e deve ser revisado por um profissional jurídico e atualizado conforme os dados e as ferramentas efetivamente utilizados.",
   sections: [
     {
       title: "Quem é o controlador dos dados",
       body: [
-        "A Visoria Studio é a responsável pelo tratamento dos dados coletados neste site. Os dados completos da empresa (razão social, CNPJ e endereço) devem ser inseridos aqui assim que forem definidos.",
+        "A Visória Studio é a responsável pelo tratamento dos dados coletados neste site. Os dados completos da empresa (razão social, CNPJ e endereço) devem ser inseridos aqui assim que forem definidos.",
       ],
     },
     {
       title: "Quais dados coletamos",
       body: [
-        "Coletamos apenas os dados que você informa voluntariamente no formulário de orçamento: nome, empresa (opcional), e-mail, WhatsApp (opcional), serviços de interesse, tipo e descrição do projeto, prazo e faixa de investimento (opcionais) e como conheceu a Visoria.",
+        "Coletamos apenas os dados que você informa voluntariamente no formulário de orçamento: nome, empresa (opcional), e-mail, WhatsApp (opcional), serviços de interesse, tipo e descrição do projeto, prazo e faixa de investimento (opcionais) e como conheceu a Visória.",
         "Este site não utiliza cookies de rastreamento nem ferramentas de análise de audiência por padrão. Caso sejam adicionados no futuro, esta política e o aviso de consentimento devem ser atualizados.",
       ],
     },

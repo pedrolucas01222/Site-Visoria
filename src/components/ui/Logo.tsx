@@ -16,7 +16,7 @@ export function Logo({ priority = false }: { priority?: boolean }) {
         className="h-10 w-auto transition-transform duration-300 group-hover:scale-105"
       />
       <span className="hidden min-[400px]:flex flex-col leading-none">
-        <Image src={wordmark.src} width={wordmark.width} height={wordmark.height} alt="" priority={priority} className="h-[0.95rem] w-auto" />
+        <Image src={wordmark.src} width={wordmark.width} height={wordmark.height} alt="" priority={priority} className="h-5 w-auto" />
         <span className="mt-1.5 block text-[0.6rem] tracking-[0.55em] text-mute" aria-hidden="true">
           STUDIO
         </span>

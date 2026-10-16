@@ -5,9 +5,9 @@ import { privacy } from "@/data/content";
 
 export const metadata: Metadata = {
   title: "Política de Privacidade",
-  description: "Como a Visoria Studio trata os dados pessoais enviados por meio deste site.",
+  description: "Como a Visória Studio trata os dados pessoais enviados por meio deste site.",
   alternates: { canonical: "/politica-de-privacidade" },
-  openGraph: { url: "/politica-de-privacidade", title: "Política de Privacidade | VISORIA Studio" },
+  openGraph: { url: "/politica-de-privacidade", title: "Política de Privacidade | VISÓRIA Studio" },
 };
 
 export default function PrivacyPage() {

@@ -11,9 +11,9 @@ import { mainAreas } from "@/data/services";
 export const metadata: Metadata = {
   title: "Sobre",
   description:
-    "Conheça a Visoria Studio: propósito, visão de futuro, valores e filosofia de trabalho de um estúdio que une criatividade, comunicação e tecnologia.",
+    "Conheça a Visória Studio: propósito, visão de futuro, valores e filosofia de trabalho de um estúdio que une criatividade, comunicação e tecnologia.",
   alternates: { canonical: "/sobre" },
-  openGraph: { url: "/sobre", title: "Sobre | VISORIA Studio" },
+  openGraph: { url: "/sobre", title: "Sobre | VISÓRIA Studio" },
 };
 
 export default function AboutPage() {

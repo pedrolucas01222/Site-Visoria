@@ -8,7 +8,7 @@ export function getWhatsAppUrl(message: string = siteConfig.contact.whatsappMess
   return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 }
 
-export function getMailtoUrl(subject = "Contato pelo site da Visoria Studio"): string | null {
+export function getMailtoUrl(subject = "Contato pelo site da Visória Studio"): string | null {
   const email = siteConfig.contact.email.trim();
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return null;
   return `mailto:${email}?subject=${encodeURIComponent(subject)}`;
@@ -61,7 +61,7 @@ export function getQuoteMailtoUrl(d: QuoteSummary): string | null {
 export function getQuoteWhatsAppUrl(d: QuoteSummary): string | null {
   const labels = d.services.map((id) => serviceOptions.find((s) => s.id === id)?.label ?? id).join(", ");
   const lines = [
-    "Olá! Gostaria de fazer um orçamento com a Visoria.",
+    "Olá! Gostaria de fazer um orçamento com a Visória.",
     "",
     `Nome: ${d.name}`,
     d.company ? `Empresa: ${d.company}` : false,

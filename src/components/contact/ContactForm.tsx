@@ -229,7 +229,7 @@ export function ContactForm({
           <MessageCircle size={36} aria-hidden="true" className="text-cyan" />
           <h2 className="mt-5 font-display text-3xl font-semibold">Falta só um passo.</h2>
           <p className="mt-3 text-mute">
-            Abrimos o WhatsApp com sua mensagem pronta. Se ele não abriu, toque no botão abaixo. O pedido só chega até a Visoria depois que você enviar a mensagem por lá.
+            Abrimos o WhatsApp com sua mensagem pronta. Se ele não abriu, toque no botão abaixo. O pedido só chega até a Visória depois que você enviar a mensagem por lá.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             {url ? (
@@ -249,7 +249,7 @@ export function ContactForm({
         <Mail size={36} aria-hidden="true" className="text-cyan" />
         <h2 className="mt-5 font-display text-3xl font-semibold">Quase lá: finalize o envio.</h2>
         <p className="mt-3 text-mute">
-          O envio automático não foi concluído, mas seu pedido está pronto. Escolha abaixo como enviá-lo para <strong className="text-paper">{siteConfig.contact.email}</strong>. O pedido só chega até a Visoria depois que você enviar.
+          O envio automático não foi concluído, mas seu pedido está pronto. Escolha abaixo como enviá-lo para <strong className="text-paper">{siteConfig.contact.email}</strong>. O pedido só chega até a Visória depois que você enviar.
         </p>
         <div className="mt-8 grid gap-3 sm:grid-cols-2">
           <a href={getQuoteGmailUrl(d)} target="_blank" rel="noopener noreferrer" className={primary}>
@@ -387,7 +387,7 @@ export function ContactForm({
             {budgetOptions.map((o) => <option key={o} value={o}>{o}</option>)}
           </select>
         </Field>
-        <Field id="origem" label="Como conheceu a Visoria?" optional>
+        <Field id="origem" label="Como conheceu a Visória?" optional>
           <select id="origem" name="source" value={values.source} onChange={(e) => set("source", e.target.value)} className={inputClass}>
             <option value="">Selecione</option>
             {sourceOptions.map((o) => <option key={o} value={o}>{o}</option>)}
